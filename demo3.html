@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Javascript Object to JSON String</title>
+    <script>
+        //Javascript constructor function
+        function Employee(firstname, lastname, age){
+            this.firstname = firstname;
+            this.lastname = lastname;
+            this.age = age;
+        }
+    </script>
+</head>
+<body>
+    <span id="out"></span>
+</body>
+<script>
+    var out = document.getElementById("out");
+    emps = new Array();
+    emps.push(new Employee("Rahul","Modi",53));
+    emps.push(new Employee("Narendra","Gandhi",72));
+    //Serialization
+    out.innerHTML = JSON.stringify(emps);
+</script>
+</html>

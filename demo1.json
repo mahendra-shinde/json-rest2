@@ -1,0 +1,9 @@
+{
+    "firstname": "mahendra" ,                               // String values
+    "languages": [ "C" , "C++", "Java", "Python" , "C#" ] , // Array value
+    "tech-skills" : {                                       // Object value                
+        "editor" : "vscode",
+        "lang" : "Java",
+        "server" : "Apache Tomcat"
+    }
+}

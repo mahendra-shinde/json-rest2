@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>JSON Parsing</title>
+    <script>
+        var req = new XMLHttpRequest();
+        req.open('GET','https://hub.dummyapis.com/employee?noofRecords=10&idStarts=1001');
+        req.setRequestHeader("Accept","application/json");
+
+        req.onreadystatechange = function (){
+            if(req.readyState == 4 && req.status == 200)
+            processResponse(req.responseText);
+        }
+        req.send();
+        
+        function processResponse(respObj){
+            // Parse, Validate and TREAT text as Javascript Object
+            var resp = JSON.parse(respObj);
+            var msg = "";
+            for(i=0;i<resp.length;i++){
+                msg += "id = "+resp[i].id;
+                msg +=", firstname = "+resp[i].firstName;
+                msg +="<br/>";
+            }
+            document.getElementById("out").innerHTML = msg;
+        }
+    </script>
+</head>
+<body>
+    <span id="out"></span>
+</body>
+</html>
