@@ -5,8 +5,10 @@ import java.util.*;
 import com.mahendra.models.Account;
 
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
 
 @Path("/accounts")
+@Produces({"application/json","application/xml"})
 public class AccountResource {
 
 	private List<Account> accounts = new LinkedList<>();
@@ -17,39 +19,42 @@ public class AccountResource {
 	}
 	
 	@GET
-	public List<Account> findAll(){
+	public Response findAll(){
 		// Return a Readonly list
-		return Collections.unmodifiableList(accounts);
+		List<Account> accList =  Collections.unmodifiableList(accounts);
+		return Response.ok(accList).build();
 	}
 	
 	@PUT
 	@Consumes("application/json")
-	public Account update(Account acc) {
+	public Response update(Account acc) {
 		Optional<Account> temp = accounts.stream().filter(x -> x.getAccNumber().equals(acc.getAccNumber())).findFirst();
 		if(temp.isPresent()) {
 			Account acc1 = temp.get();
 			acc1.setAccHolderName(acc.getAccHolderName());
 			acc1.setBalance(acc.getBalance());
-			return acc1;
+			// Return HTTP Status 200 / OK
+			return Response.ok(acc1).build();
 		}
-		return null;
+		return Response.notModified("Record not found!").build();
 	}
 	
 	@POST
 	@Consumes("application/json")
-	public Account create(Account acc) {
+	public Response create(Account acc) {
 		accounts.add(acc);
-		return acc;
+		return Response.ok(acc).build();
 	}
 	
 	@DELETE
-	public String deleteByNumber(@QueryParam("accno") String accno ) {
+	@Produces("text/plain")
+	public Response deleteByNumber(@QueryParam("accno") String accno ) {
 		Optional<Account> temp = accounts.stream().filter(x -> x.getAccNumber().equals(accno)).findFirst();
 		if(temp.isPresent()) {
 			Account acc1 = temp.get();
 			accounts.remove(acc1);
-			return "Record Deleted";
+			return Response.ok("Record deleted successfuly").build();
 		}
-		else return "Record not found";
+		else return Response.status(404).entity("Record not found").header("Redirect", "http://.....").build();
 	}
 }

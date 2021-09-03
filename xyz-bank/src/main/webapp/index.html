@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>XYZ Bank : Accounts </title>
+    <script>
+    	function loadAcc(){
+        var req = new XMLHttpRequest();
+        req.open('GET','http://localhost:8084/xyz-bank/api/accounts');
+        req.setRequestHeader("Accept","application/json");
+
+        req.onreadystatechange = function (){
+            if(req.readyState == 4 && req.status == 200){
+            // Read the custom response header set by service developer
+            var url = req.getResponseHeader("Redirect");
+            console.log(url);
+            processResponse(req.responseText);
+            }
+        }
+        req.send();
+    	}
+        
+        function processResponse(respObj){
+            // Parse, Validate and TREAT text as Javascript Object
+            var resp = JSON.parse(respObj);
+            var msg = "";
+            for(i=0;i<resp.length;i++){
+            	msg += "<tr><td>"+resp[i].accNumber;
+                msg += "</td><td>"+resp[i].accHolderName;
+                msg +="</td><td>"+resp[i].balance;
+                msg += "</td><td><input type=button onclick='deleteAccount("+ resp[i].accNumber +")' value='Delete' />";
+                msg +="</td></tr>";
+            }
+            document.getElementById("out").innerHTML = msg;
+        }
+        
+        function deleteAccount(accNumber){
+        	var delReq = new XMLHttpRequest();
+        	delReq.open('DELETE','http://localhost:8084/xyz-bank/api/accounts?accno='+accNumber);
+        	delReq.setRequestHeader("Accept","text/plain");
+        	delReq.onreadystatechange = function (){
+        		if(delReq.readyState==4){
+        		 if(delReq.status == 200){
+        	         
+        			 alert("INFO "+delReq.responseText);
+        			 
+        		 }else if (delReq.status == 404 ){
+        			 var url = delReq.getResponseHeader("Redirect");
+        	         console.log(url);
+        			 alert("ERROR " +delReq.responseText+" Please redirect to "+url);
+        		 }
+        		}
+        	}
+        	delReq.send();
+        	
+        }
+    </script>
+    <style>
+    	table{
+    	padding: 3px;
+    	border: 2px dashed darkred;
+    	font-family: tahoma arial;
+    	}
+    	
+    	thead {
+    		background-color: lightred;
+			color: blue;
+    	}
+    	tbody {
+    		background-color: #cc9999;
+    	}
+    	td{
+    	padding: 5px;
+    	}
+    </style>
+</head>
+<body>
+	<input type="button" value="load" onclick="loadAcc()"/>
+    <table>
+    <thead>
+    <tr>
+    <th>
+    Account Number
+    </th>
+    <th>
+    Account Holder Name
+    </th>
+    <th>
+    Balance
+    </th>
+    <th>
+    Actions
+    </th>
+    </tr>
+    </thead>
+    <tbody id="out">
+    </tbody>
+    </table>
+</body>
+</html>
