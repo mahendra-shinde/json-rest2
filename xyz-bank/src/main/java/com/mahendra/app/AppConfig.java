@@ -3,6 +3,7 @@ package com.mahendra.app;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.mahendra.resources.AccountResource;
 import com.mahendra.resources.HelloResource;
 
 import jakarta.ws.rs.ApplicationPath;
@@ -31,6 +32,7 @@ public class AppConfig extends Application {
 		Set<Object> singletons = new HashSet<Object>(); 
 		// Register your REST Controllers....
 		singletons.add(new HelloResource());
+		singletons.add(new AccountResource());
 		return singletons;
 	}
 }
